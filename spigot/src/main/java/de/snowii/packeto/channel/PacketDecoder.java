@@ -6,8 +6,8 @@ import de.snowii.packeto.PacketoSpigotPlatform;
 import de.snowii.packeto.api.listener.SpigotPacketEvent;
 import de.snowii.packeto.inject.PaperInjector;
 import de.snowii.packeto.inject.PipelineNames;
-import de.snowii.packeto.packet.ConnectionState;
 import de.snowii.packeto.packet.PacketDirection;
+import de.snowii.packeto.packet.user.SimplePacketUser;
 import de.snowii.packeto.util.softdepend.viaversion.ViaVersionUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
@@ -20,22 +20,22 @@ import java.util.List;
 @ChannelHandler.Sharable
 // Client -> Server
 public final class PacketDecoder extends MessageToMessageDecoder<ByteBuf> {
-    private ConnectionState connectionState;
+    private SimplePacketUser simplePacketUser;
 
-    public PacketDecoder(ConnectionState state) {
-        this.connectionState = state;
+    public PacketDecoder(SimplePacketUser simplePacketUser) {
+        this.simplePacketUser = simplePacketUser;
     }
 
     @Override
     protected void decode(final ChannelHandlerContext ctx, final ByteBuf msg, final List<Object> out) throws Exception {
         if (msg.isReadable()) {
             try (final var ignored = PacketoSpigotPlatform.getTimingManager().ofStart("PacketDecoder")) {
-                if (PacketoSpigotPlatform.getInstance().getListenerManager().callEventNormal(new SpigotPacketEvent(PacketDirection.CLIENT, connectionState, msg))) {
+                if (PacketoSpigotPlatform.getInstance().getListenerManager().callEventNormal(new SpigotPacketEvent(PacketDirection.CLIENT, simplePacketUser, msg))) {
                     msg.clear();
                 }
                 msg.resetReaderIndex();
                 out.add(msg.retain());
-                PacketoSpigotPlatform.getInstance().getListenerManager().callEventReadonly(new SpigotPacketEvent(PacketDirection.CLIENT, connectionState, msg));
+                PacketoSpigotPlatform.getInstance().getListenerManager().callEventReadonly(new SpigotPacketEvent(PacketDirection.CLIENT, simplePacketUser, msg));
             }
         }
     }

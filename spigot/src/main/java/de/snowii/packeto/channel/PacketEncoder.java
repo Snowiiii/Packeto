@@ -5,8 +5,8 @@ import de.snowii.packeto.PacketoSpigotPlatform;
 import de.snowii.packeto.api.listener.SpigotPacketEvent;
 import de.snowii.packeto.inject.PaperInjector;
 import de.snowii.packeto.inject.PipelineNames;
-import de.snowii.packeto.packet.ConnectionState;
 import de.snowii.packeto.packet.PacketDirection;
+import de.snowii.packeto.packet.user.SimplePacketUser;
 import de.snowii.packeto.util.PipelineUtil;
 import de.snowii.packeto.util.softdepend.viaversion.ViaVersionUtil;
 import io.netty.buffer.ByteBuf;
@@ -25,10 +25,10 @@ import java.util.List;
 public final class PacketEncoder extends MessageToMessageEncoder<ByteBuf> {
     private boolean handledCompression = PaperInjector.COMPRESSION_ENABLED_EVENT != null;
 
-    private ConnectionState connectionState;
+    private SimplePacketUser simplePacketUser;
 
-    public PacketEncoder(ConnectionState state) {
-        this.connectionState = state;
+    public PacketEncoder(SimplePacketUser simplePacketUser) {
+        this.simplePacketUser = simplePacketUser;
     }
 
 
@@ -39,7 +39,7 @@ public final class PacketEncoder extends MessageToMessageEncoder<ByteBuf> {
         if (msg.isReadable()) {
             try (final var ignored = PacketoSpigotPlatform.getTimingManager().ofStart("PacketEncoder")) {
                 final int startReadIndex = msg.readerIndex();
-                if (PacketoSpigotPlatform.getInstance().getListenerManager().callEventNormal(new SpigotPacketEvent(PacketDirection.SERVER, connectionState, msg))) {
+                if (PacketoSpigotPlatform.getInstance().getListenerManager().callEventNormal(new SpigotPacketEvent(PacketDirection.SERVER, simplePacketUser, msg))) {
                     msg.clear();
                 }
                 msg.readerIndex(startReadIndex);
@@ -50,7 +50,7 @@ public final class PacketEncoder extends MessageToMessageEncoder<ByteBuf> {
             recompress(ctx, msg);
         }
         out.add(msg.retain());
-        PacketoSpigotPlatform.getInstance().getListenerManager().callEventReadonly(new SpigotPacketEvent(PacketDirection.SERVER, connectionState, msg));
+        PacketoSpigotPlatform.getInstance().getListenerManager().callEventReadonly(new SpigotPacketEvent(PacketDirection.SERVER, simplePacketUser, msg));
     }
 
     @Override
@@ -96,5 +96,9 @@ public final class PacketEncoder extends MessageToMessageEncoder<ByteBuf> {
             return true;
         }
         return false;
+    }
+
+    public SimplePacketUser getSimplePacketUser() {
+        return simplePacketUser;
     }
 }

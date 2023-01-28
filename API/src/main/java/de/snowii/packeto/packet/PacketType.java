@@ -25,6 +25,9 @@ public class PacketType implements Serializable, Cloneable, Comparable<PacketTyp
         return 0;
     }
 
+    /**
+     * Packets that are Send by the Server to the Client
+     */
     @SuppressWarnings("unused")
     public static class Server {
 
@@ -93,6 +96,9 @@ public class PacketType implements Serializable, Cloneable, Comparable<PacketTyp
         }
     }
 
+    /**
+     * Packets that are Send by the Client to the Server
+     */
     @SuppressWarnings("unused")
     public static class Client {
 
@@ -189,8 +195,6 @@ public class PacketType implements Serializable, Cloneable, Comparable<PacketTyp
             case HANDSHAKING -> {
                 if (side == PacketDirection.CLIENT) {
                     return Client.Handshake.getById(packetID);
-                } else {
-                    throw new IllegalStateException("Handshake from Server ? mhh");
                 }
             }
             case STATUS -> {
@@ -214,10 +218,8 @@ public class PacketType implements Serializable, Cloneable, Comparable<PacketTyp
              return Play.Server.getById(version, packetID);
              }
              **/
-            default -> {
-                return null;
-            }
         }
+        return null;
     }
 
 

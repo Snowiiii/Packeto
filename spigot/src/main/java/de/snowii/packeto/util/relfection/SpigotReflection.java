@@ -2,6 +2,7 @@ package de.snowii.packeto.util.relfection;
 
 import de.snowii.packeto.util.reflection.ReflectionObject;
 import de.snowii.packeto.util.reflection.ReflectionUtil;
+import io.netty.channel.Channel;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -9,7 +10,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.nio.channels.Channel;
 
 public class SpigotReflection {
     private static String CRAFTBUKKIT_PACKAGE;

@@ -14,6 +14,7 @@ public class PacketoSpigotTest extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        platform.postLoad();
         platform.getListenerManager().registerListener(new SpigotPacketListener() {
             @Override
             public void onPacketReceive(@NotNull SpigotPacketEvent event) {
@@ -33,7 +34,7 @@ public class PacketoSpigotTest extends JavaPlugin {
         instance = this;
         getLogger().warning("Loading Packeto Spigot Test");
         platform = new PacketoSpigotPlatform(this);
-        platform.load();
+        platform.preLoad();
     }
 
     @Override

@@ -1,10 +1,10 @@
 package de.snowii.packeto.packet.listener;
 
 import de.snowii.packeto.packet.BasePacketType;
-import de.snowii.packeto.packet.ConnectionState;
 import de.snowii.packeto.packet.PacketDirection;
 import de.snowii.packeto.packet.PacketType;
 import de.snowii.packeto.packet.buffer.PacketBuffer;
+import de.snowii.packeto.packet.user.SimplePacketUser;
 import io.netty.buffer.ByteBuf;
 
 
@@ -13,13 +13,13 @@ public class PacketEvent {
     private final BasePacketType packetType;
     private final PacketDirection direction;
     private final PacketBuffer packetBuffer;
-    private final ConnectionState connectionState;
+    private final SimplePacketUser packetUser;
 
-    public PacketEvent(PacketDirection direction, ConnectionState connectionState, ByteBuf byteBuf) {
+    public PacketEvent(PacketDirection direction, SimplePacketUser packetUser, ByteBuf byteBuf) {
         this.direction = direction;
-        this.connectionState = connectionState;
+        this.packetUser = packetUser;
         this.packetBuffer = new PacketBuffer(byteBuf);
-        this.packetType = PacketType.getById(direction, connectionState, new PacketBuffer(byteBuf).readVarInt());
+        this.packetType = PacketType.getById(direction, packetUser.getState(), this.packetBuffer.readVarInt());
     }
 
     public void setCancelled(boolean cancelled) {
@@ -38,8 +38,8 @@ public class PacketEvent {
         return packetType;
     }
 
-    public ConnectionState getConnectionState() {
-        return connectionState;
+    public SimplePacketUser getPacketUser() {
+        return packetUser;
     }
 
     public PacketBuffer getPacketBuffer() {
