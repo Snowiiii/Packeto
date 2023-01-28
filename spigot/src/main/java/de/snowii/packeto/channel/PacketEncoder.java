@@ -37,7 +37,7 @@ public final class PacketEncoder extends MessageToMessageEncoder<ByteBuf> {
         final boolean needsRecompression = !handledCompression && handleCompressionOrder(ctx, msg);
 
         if (msg.isReadable()) {
-            try (final var ignored = PacketoSpigotPlatform.getTimingManager().ofStart("PacketEncoder")) {
+            try (final var ignored = PacketoSpigotPlatform.getInstance().getTimingManager().ofStart("PacketEncoder")) {
                 final int startReadIndex = msg.readerIndex();
                 if (PacketoSpigotPlatform.getInstance().getListenerManager().callEventNormal(new SpigotPacketEvent(PacketDirection.SERVER, simplePacketUser, msg))) {
                     msg.clear();

@@ -29,7 +29,7 @@ public final class PacketDecoder extends MessageToMessageDecoder<ByteBuf> {
     @Override
     protected void decode(final ChannelHandlerContext ctx, final ByteBuf msg, final List<Object> out) throws Exception {
         if (msg.isReadable()) {
-            try (final var ignored = PacketoSpigotPlatform.getTimingManager().ofStart("PacketDecoder")) {
+            try (final var ignored = PacketoSpigotPlatform.getInstance().getTimingManager().ofStart("PacketDecoder")) {
                 if (PacketoSpigotPlatform.getInstance().getListenerManager().callEventNormal(new SpigotPacketEvent(PacketDirection.CLIENT, simplePacketUser, msg))) {
                     msg.clear();
                 }
@@ -41,7 +41,7 @@ public final class PacketDecoder extends MessageToMessageDecoder<ByteBuf> {
     }
 
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+    public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) throws Exception {
         if (ViaVersionUtil.isAvailable() && PipelineUtil.containsCause(cause, CancelCodecException.class)) {
             return;
         }

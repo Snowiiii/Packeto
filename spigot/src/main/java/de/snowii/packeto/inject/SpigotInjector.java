@@ -5,7 +5,10 @@ import de.snowii.packeto.util.Pair;
 import de.snowii.packeto.util.SynchronizedListWrapper;
 import de.snowii.packeto.util.reflection.ReflectionUtil;
 import de.snowii.packeto.util.relfection.SpigotReflection;
-import io.netty.channel.*;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelInitializer;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

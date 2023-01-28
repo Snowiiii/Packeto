@@ -38,7 +38,7 @@ public class SpigotChannelInitializer extends ChannelInitializer<Channel> implem
     }
 
     public static void afterInitChannel(final Channel channel) {
-        try (var ignored = PacketoSpigotPlatform.getTimingManager().ofStart("InitChannel")) {
+        try (var ignored = PacketoSpigotPlatform.getInstance().getTimingManager().ofStart("InitChannel")) {
             SimplePacketUser user = new SimplePacketUser(channel);
 
             final ChannelPipeline pipeline = channel.pipeline();

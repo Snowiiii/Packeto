@@ -20,16 +20,16 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class PacketoSpigotPlatform implements Platform {
-    private static TimingManager timingManager;
+    private final TimingManager timingManager;
+    private final JavaPlugin plugin;
     private SpigotInjector injector;
     private SpigotListenerManager listenerManager;
-    private final JavaPlugin plugin;
 
     private static PacketoSpigotPlatform instance;
 
     public PacketoSpigotPlatform(final @NotNull JavaPlugin plugin) {
         this.plugin = plugin;
-        timingManager = TimingManager.of(plugin);
+        this.timingManager = TimingManager.of(plugin);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class PacketoSpigotPlatform implements Platform {
         return this.listenerManager;
     }
 
-    public static @NotNull TimingManager getTimingManager() {
+    public @NotNull TimingManager getTimingManager() {
         return timingManager;
     }
 
