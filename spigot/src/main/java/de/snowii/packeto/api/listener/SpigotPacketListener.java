@@ -3,7 +3,7 @@ package de.snowii.packeto.api.listener;
 import de.snowii.packeto.packet.listener.PacketListener;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class SpigotPacketListener extends PacketListener {
+public abstract class SpigotPacketListener implements PacketListener {
     public void onPacketReceive(@NotNull SpigotPacketEvent event) {
 
     }

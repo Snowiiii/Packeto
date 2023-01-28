@@ -5,6 +5,7 @@ import de.snowii.packeto.channel.PacketDecoder;
 import de.snowii.packeto.channel.PacketEncoder;
 import de.snowii.packeto.inject.PipelineNames;
 import de.snowii.packeto.inject.WrappedChannelInitializer;
+import de.snowii.packeto.packet.ConnectionState;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
@@ -39,8 +40,8 @@ public class SpigotChannelInitializer extends ChannelInitializer<Channel> implem
     public static void afterInitChannel(final Channel channel) {
         try (var ignored = PacketoSpigotPlatform.getTimingManager().ofStart("InitChannel")) {
             final ChannelPipeline pipeline = channel.pipeline();
-            pipeline.addAfter(PipelineNames.MINECRAFT_ENCODER, PipelineNames.ENCODER_NAME, new PacketEncoder());
-            pipeline.addAfter(PipelineNames.MINECRAFT_DECODER, PipelineNames.DECODER_NAME, new PacketDecoder());
+            pipeline.addAfter(PipelineNames.MINECRAFT_ENCODER, PipelineNames.ENCODER_NAME, new PacketEncoder(ConnectionState.HANDSHAKING));
+            pipeline.addAfter(PipelineNames.MINECRAFT_DECODER, PipelineNames.DECODER_NAME, new PacketDecoder(ConnectionState.HANDSHAKING));
         }
     }
 

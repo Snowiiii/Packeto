@@ -26,15 +26,17 @@ public class PacketoSpigotPlatform implements Platform {
 
     @Override
     public void load() {
-        instance = this;
-        // important Reflection must be init first
-        SpigotReflection.init();
-        if (!PaperInjector.PAPER_INJECTION_METHOD) {
-            PipelineUtil.init();
+        if (instance != null) { // Already loaded
+            instance = this;
+            // important Reflection must be init first
+            SpigotReflection.init();
+            if (!PaperInjector.PAPER_INJECTION_METHOD) {
+                PipelineUtil.init();
+            }
+            this.injector = new SpigotInjector();
+            this.injector.inject();
+            this.listenerManager = new SpigotListenerManager();
         }
-        this.injector = new SpigotInjector();
-        this.injector.inject();
-        this.listenerManager = new SpigotListenerManager();
     }
 
     @Override
