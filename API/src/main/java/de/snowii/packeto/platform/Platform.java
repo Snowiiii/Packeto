@@ -6,15 +6,11 @@ import org.jetbrains.annotations.NotNull;
 
 public interface Platform {
 
-    /**
-     * Called if Plugin has been Enabled
-     */
-    void postLoad();
 
     /**
-     * Called if Plugin currently Loading
+     * Must be Called on Enabling
      */
-    void preLoad();
+    void load();
 
     void shutdown();
 

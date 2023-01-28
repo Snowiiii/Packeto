@@ -1,75 +1,65 @@
 package de.snowii.packeto.api.listener;
 
 import de.snowii.packeto.packet.listener.ListenerManager;
-import de.snowii.packeto.packet.listener.PacketEvent;
-import de.snowii.packeto.packet.listener.PacketListener;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SpigotListenerManager implements ListenerManager {
+public class SpigotListenerManager implements ListenerManager<SpigotPacketEvent, SpigotPacketListener> {
     private final List<SpigotPacketListener> packetListeners = new ArrayList<>();
 
     private final List<SpigotPacketListener> readonlyPacketListeners = new ArrayList<>();
 
     @Override
-    public boolean callEventNormal(final @NotNull PacketEvent event) {
-        if (event instanceof SpigotPacketEvent spigotPacketEvent) {
-            switch (event.getDirection()) {
-                case SERVER -> {
-                    for (final var packetListener : this.packetListeners) {
-                        packetListener.onPacketSend(spigotPacketEvent);
-                    }
-                }
-                case CLIENT -> {
-                    for (final var packetListener : this.packetListeners) {
-                        packetListener.onPacketReceive(spigotPacketEvent);
-                    }
+    public boolean callEventNormal(final @NotNull SpigotPacketEvent event) {
+        switch (event.getDirection()) {
+            case SERVER -> {
+                for (final var packetListener : this.packetListeners) {
+                    packetListener.onPacketSend(event);
                 }
             }
-        } else throw new IllegalStateException("Tried to Call a Non Spigot Event on Spigot Platform");
+            case CLIENT -> {
+                for (final var packetListener : this.packetListeners) {
+                    packetListener.onPacketReceive(event);
+                }
+            }
+        }
         return event.isCancelled();
     }
 
     @Override
-    public void callEventReadonly(final @NotNull PacketEvent event) {
-        if (event instanceof SpigotPacketEvent spigotPacketEvent) {
-            switch (event.getDirection()) {
-                case SERVER -> {
-                    for (final var packetListener : this.readonlyPacketListeners) {
-                        packetListener.onPacketSend(spigotPacketEvent);
-                    }
-                }
-                case CLIENT -> {
-                    for (final var packetListener : this.readonlyPacketListeners) {
-                        packetListener.onPacketReceive(spigotPacketEvent);
-                    }
+    public void callEventReadonly(final @NotNull SpigotPacketEvent event) {
+        switch (event.getDirection()) {
+            case SERVER -> {
+                for (final var packetListener : this.readonlyPacketListeners) {
+                    packetListener.onPacketSend(event);
                 }
             }
-        } else throw new IllegalStateException("Tried to Call a Non Spigot Event on Spigot Platform");
+            case CLIENT -> {
+                for (final var packetListener : this.readonlyPacketListeners) {
+                    packetListener.onPacketReceive(event);
+                }
+            }
+        }
     }
 
     @Override
-    public void registerListener(@NotNull PacketListener listener, boolean readOnly) {
-        if (listener instanceof SpigotPacketListener spigotPacketListener) {
-            if (readOnly) {
-                this.readonlyPacketListeners.add(spigotPacketListener);
-            } else {
-                this.packetListeners.add(spigotPacketListener);
-            }
-        } else throw new IllegalStateException("Tried to Register a Non Spigot Listener on Spigot Platform");
+    public void registerListener(final @NotNull SpigotPacketListener listener, final boolean readOnly) {
+        if (readOnly) {
+            this.readonlyPacketListeners.add(listener);
+        } else {
+            this.packetListeners.add(listener);
+        }
     }
 
     @Override
-    public void removeListener(@NotNull PacketListener listener, boolean readOnly) {
-        if (listener instanceof SpigotPacketListener spigotPacketListener) {
-            if (readOnly) {
-                this.readonlyPacketListeners.remove(listener);
-            } else {
-                this.packetListeners.remove(listener);
-            }
-        } else throw new IllegalStateException("Tried to Remove a Non Spigot Listener on Spigot Platform");
+    public void removeListener(final @NotNull SpigotPacketListener listener, final boolean readOnly) {
+        if (readOnly) {
+            this.readonlyPacketListeners.remove(listener);
+        } else {
+            this.packetListeners.remove(listener);
+        }
     }
 
     @Override
@@ -79,12 +69,12 @@ public class SpigotListenerManager implements ListenerManager {
     }
 
     @Override
-    public List<?> getPacketListeners() {
+    public List<SpigotPacketListener> getPacketListeners() {
         return this.packetListeners;
     }
 
     @Override
-    public List<?> getReadonlyPacketListeners() {
+    public List<SpigotPacketListener> getReadonlyPacketListeners() {
         return this.readonlyPacketListeners;
     }
 }

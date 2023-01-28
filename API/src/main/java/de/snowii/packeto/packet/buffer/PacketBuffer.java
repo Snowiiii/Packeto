@@ -2,7 +2,6 @@ package de.snowii.packeto.packet.buffer;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
-import io.netty.buffer.ByteBufProcessor;
 import io.netty.handler.codec.DecoderException;
 import io.netty.handler.codec.EncoderException;
 
@@ -10,7 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.channels.GatheringByteChannel;
 import java.nio.channels.ScatteringByteChannel;
 import java.nio.charset.Charset;
@@ -19,6 +17,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
 
+@SuppressWarnings("unused")
 public class PacketBuffer {
     private final ByteBuf buf;
     private Map<String, Object> customData;
@@ -287,14 +286,6 @@ public class PacketBuffer {
 
     public ByteBufAllocator alloc() {
         return this.buf.alloc();
-    }
-
-    public ByteOrder order() {
-        return this.buf.order();
-    }
-
-    public ByteBuf order(ByteOrder p_order_1_) {
-        return this.buf.order(p_order_1_);
     }
 
     public ByteBuf unwrap() {
@@ -741,27 +732,6 @@ public class PacketBuffer {
     public int bytesBefore(int p_bytesBefore_1_, int p_bytesBefore_2_, byte p_bytesBefore_3_) {
         return this.buf.bytesBefore(p_bytesBefore_1_, p_bytesBefore_2_, p_bytesBefore_3_);
     }
-
-
-    public int forEachByte(ByteBufProcessor processor) {
-        return this.buf.forEachByte(processor);
-    }
-
-
-    public int forEachByte(int index, int length, ByteBufProcessor processor) {
-        return this.buf.forEachByte(index, length, processor);
-    }
-
-
-    public int forEachByteDesc(ByteBufProcessor processor) {
-        return this.buf.forEachByte(processor);
-    }
-
-
-    public int forEachByteDesc(int index, int length, ByteBufProcessor processor) {
-        return this.buf.forEachByte(index, length, processor);
-    }
-
 
     public ByteBuf copy() {
         return this.buf.copy();

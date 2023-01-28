@@ -4,19 +4,23 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public interface ListenerManager {
+/**
+ * @param <T> Event
+ * @param <E> Listener
+ */
+public interface ListenerManager<T, E> {
 
-    boolean callEventNormal(final @NotNull PacketEvent event);
+    boolean callEventNormal(final @NotNull T event);
 
-    void callEventReadonly(final @NotNull PacketEvent event);
+    void callEventReadonly(final @NotNull T event);
 
-    void registerListener(final @NotNull PacketListener listener, final boolean readOnly);
+    void registerListener(final @NotNull E listener, final boolean readOnly);
 
-    void removeListener(final @NotNull PacketListener listener, final boolean readOnly);
+    void removeListener(final @NotNull E listener, final boolean readOnly);
 
     void removeAllListeners();
 
-    List<?> getPacketListeners();
+    List<E> getPacketListeners();
 
-    List<?> getReadonlyPacketListeners();
+    List<E> getReadonlyPacketListeners();
 }

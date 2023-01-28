@@ -100,6 +100,7 @@ public class SpigotInjector implements ChannelInjector {
         return injected;
     }
 
+    @SuppressWarnings("unchecked")
     private void injectChannel(final ChannelFuture future) {
         final List<String> names = future.channel().pipeline().names();
         ChannelHandler bootstrapAcceptor = null;
@@ -132,6 +133,7 @@ public class SpigotInjector implements ChannelInjector {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void uninject() {
         if (!this.injected) throw new IllegalStateException("Tried to uninject Packeto although its not Injected");
         if (PaperInjector.PAPER_INJECTION_METHOD) {

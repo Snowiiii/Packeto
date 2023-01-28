@@ -1,5 +1,6 @@
 package de.snowii.packeto.packet;
 
+@SuppressWarnings("unused")
 public enum ConnectionState {
     HANDSHAKING,
     STATUS,

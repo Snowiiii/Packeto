@@ -30,15 +30,6 @@ public class PacketoSpigotPlatform implements Platform {
     public PacketoSpigotPlatform(final @NotNull JavaPlugin plugin) {
         this.plugin = plugin;
         this.timingManager = TimingManager.of(plugin);
-    }
-
-    @Override
-    public void postLoad() {
-        Bukkit.getPluginManager().registerEvents(new PacketoBukkitListener(), this.plugin);
-    }
-
-    @Override
-    public void preLoad() {
         if (instance == null) {
             instance = this;
             // important Reflection must be init first
@@ -68,6 +59,11 @@ public class PacketoSpigotPlatform implements Platform {
     }
 
     @Override
+    public void load() {
+        Bukkit.getPluginManager().registerEvents(new PacketoBukkitListener(), this.plugin);
+    }
+
+    @Override
     public void shutdown() {
         if (this.injector.isInjected()) this.injector.uninject();
     }
@@ -78,7 +74,7 @@ public class PacketoSpigotPlatform implements Platform {
     }
 
     @Override
-    public @NotNull ListenerManager getListenerManager() {
+    public @NotNull ListenerManager<SpigotPacketEvent, SpigotPacketListener> getListenerManager() {
         return this.listenerManager;
     }
 
