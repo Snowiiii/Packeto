@@ -1,0 +1,11 @@
+name: Packeto
+website: https://github.com/Snowiiii/Packeto
+version: '${version}'
+description: '${description}'
+main: de.snowii.packeto.PacketoSpigotTest
+api-version: 1.13
+author: snowii
+softdepend:
+  - ProtocolSupport
+  - ViaVersion
+  - Geyser-Spigot
