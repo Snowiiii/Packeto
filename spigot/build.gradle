@@ -21,7 +21,7 @@ dependencies {
     implementation "co.aikar:minecraft-timings:1.0.4"
 
     compileOnly "io.netty:netty-all:${nettyVersion}"
-    compileOnly 'com.viaversion:viaversion:4.5.0'
+    compileOnly 'com.viaversion:viaversion:4.5.1'
 
     compileOnly 'org.spigotmc:spigot-api:1.19.3-R0.1-SNAPSHOT'
 
