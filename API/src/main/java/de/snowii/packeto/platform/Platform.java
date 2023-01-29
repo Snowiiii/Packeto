@@ -12,9 +12,18 @@ public interface Platform {
      */
     void load();
 
+    /**
+     * Please don't Forget to shut down if Platform no longer needed
+     */
     void shutdown();
 
+    /**
+     * @return Platform Specific Channel Injector
+     */
     @NotNull ChannelInjector getInjector();
 
+    /**
+     * @return Platform Specific Packet Listener
+     */
     @NotNull ListenerManager getListenerManager();
 }

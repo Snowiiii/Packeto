@@ -17,11 +17,12 @@ import java.util.List;
 public class SpigotInjector implements ChannelInjector {
     protected final List<ChannelFuture> injectedFutures = new ArrayList<>();
     protected final List<Pair<Field, Object>> injectedLists = new ArrayList<>();
-
     private boolean injected = false;
 
+    private final boolean usePaper = true;
+
     public boolean isServerBound() {
-        if (PaperInjector.PAPER_INJECTION_METHOD) {
+        if (this.usePaper && PaperInjector.PAPER_INJECTION_METHOD) {
             return true;
         }
         try {
@@ -30,7 +31,7 @@ public class SpigotInjector implements ChannelInjector {
                 return false;
             }
 
-            for (Field field : connection.getClass().getDeclaredFields()) {
+            for (final Field field : connection.getClass().getDeclaredFields()) {
                 if (!List.class.isAssignableFrom(field.getType())) {
                     continue;
                 }
@@ -55,12 +56,12 @@ public class SpigotInjector implements ChannelInjector {
     public void inject() {
         if (this.injected) throw new IllegalStateException("Tried to inject Packeto although it Already injected");
 
-        if (PaperInjector.PAPER_INJECTION_METHOD) {
+        if (this.usePaper && PaperInjector.PAPER_INJECTION_METHOD) {
             try {
-                PaperInjector.setPaperChannelInitializeListener();
+                PaperInjector.addPaperChannelInitializeListener();
                 this.injected = true;
             } catch (ReflectiveOperationException e) {
-                throw new RuntimeException("Packet: Failed to Init Paper Channel Listener", e);
+                throw new RuntimeException("Packeto: Failed to Init Paper Channel Listener", e);
             }
             return;
         }
@@ -71,7 +72,7 @@ public class SpigotInjector implements ChannelInjector {
             if (serverConnection != null) {
                 for (final Field field : serverConnection.getClass().getDeclaredFields()) {
                     // Check for list with the correct generic type
-                    if (!List.class.isAssignableFrom(field.getType()) || !field.getGenericType().getTypeName().contains(ChannelFuture.class.getName())) {
+                    if (!field.getGenericType().getTypeName().contains(ChannelFuture.class.getName())) {
                         continue;
                     }
                     field.setAccessible(true);
@@ -97,7 +98,7 @@ public class SpigotInjector implements ChannelInjector {
 
     @Override
     public boolean isInjected() {
-        return injected;
+        return this.injected;
     }
 
     @SuppressWarnings("unchecked")
@@ -136,12 +137,12 @@ public class SpigotInjector implements ChannelInjector {
     @SuppressWarnings("unchecked")
     public void uninject() {
         if (!this.injected) throw new IllegalStateException("Tried to uninject Packeto although its not Injected");
-        if (PaperInjector.PAPER_INJECTION_METHOD) {
+        if (this.usePaper && PaperInjector.PAPER_INJECTION_METHOD) {
             try {
                 PaperInjector.removePaperChannelInitializeListener();
                 this.injected = false;
             } catch (ReflectiveOperationException e) {
-                throw new RuntimeException("Packet: Failed to remove Paper Channel Listener", e);
+                throw new RuntimeException("Packeto: Failed to remove Paper Channel Listener", e);
             }
             return;
         }
@@ -182,12 +183,12 @@ public class SpigotInjector implements ChannelInjector {
 
         injectedFutures.clear();
 
-        for (Pair<Field, Object> pair : injectedLists) {
+        for (final Pair<Field, Object> pair : injectedLists) {
             try {
                 final Field field = pair.key();
                 final Object o = field.get(pair.value());
                 if (o instanceof SynchronizedListWrapper) {
-                    final List<ChannelFuture> originalList = ((SynchronizedListWrapper) o).originalList();
+                    final List<ChannelFuture> originalList = ((SynchronizedListWrapper<ChannelFuture>) o).originalList();
                     synchronized (originalList) {
                         field.set(pair.value(), originalList);
                     }

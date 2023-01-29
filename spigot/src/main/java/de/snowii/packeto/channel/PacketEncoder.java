@@ -16,6 +16,7 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.MessageToByteEncoder;
 import io.netty.handler.codec.MessageToMessageEncoder;
+import org.bukkit.entity.Player;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -24,10 +25,11 @@ import java.util.List;
 // Server -> Client
 public final class PacketEncoder extends MessageToMessageEncoder<ByteBuf> {
     private boolean handledCompression = PaperInjector.COMPRESSION_ENABLED_EVENT != null;
+    private Player player;
 
-    private SimplePacketUser simplePacketUser;
+    private final SimplePacketUser simplePacketUser;
 
-    public PacketEncoder(SimplePacketUser simplePacketUser) {
+    public PacketEncoder(final SimplePacketUser simplePacketUser) {
         this.simplePacketUser = simplePacketUser;
     }
 
@@ -39,7 +41,7 @@ public final class PacketEncoder extends MessageToMessageEncoder<ByteBuf> {
         if (msg.isReadable()) {
             try (final var ignored = PacketoSpigotPlatform.getInstance().getTimingManager().ofStart("PacketEncoder")) {
                 final int startReadIndex = msg.readerIndex();
-                if (PacketoSpigotPlatform.getInstance().getListenerManager().callEventNormal(new SpigotPacketEvent(PacketDirection.SERVER, simplePacketUser, msg))) {
+                if (PacketoSpigotPlatform.getInstance().getListenerManager().callEventNormal(new SpigotPacketEvent(this.player, PacketDirection.SERVER, simplePacketUser, msg))) {
                     msg.clear();
                 }
                 msg.readerIndex(startReadIndex);
@@ -50,7 +52,7 @@ public final class PacketEncoder extends MessageToMessageEncoder<ByteBuf> {
             recompress(ctx, msg);
         }
         out.add(msg.retain());
-        PacketoSpigotPlatform.getInstance().getListenerManager().callEventReadonly(new SpigotPacketEvent(PacketDirection.SERVER, simplePacketUser, msg));
+        PacketoSpigotPlatform.getInstance().getListenerManager().callEventReadonly(new SpigotPacketEvent(this.player, PacketDirection.SERVER, simplePacketUser, msg));
     }
 
     @Override
@@ -100,5 +102,9 @@ public final class PacketEncoder extends MessageToMessageEncoder<ByteBuf> {
 
     public SimplePacketUser getSimplePacketUser() {
         return simplePacketUser;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 }

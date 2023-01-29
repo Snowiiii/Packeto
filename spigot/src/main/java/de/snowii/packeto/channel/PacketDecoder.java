@@ -14,15 +14,17 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;
 import io.netty.handler.codec.MessageToMessageDecoder;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 
 @ChannelHandler.Sharable
 // Client -> Server
 public final class PacketDecoder extends MessageToMessageDecoder<ByteBuf> {
+    private Player player;
     private SimplePacketUser simplePacketUser;
 
-    public PacketDecoder(SimplePacketUser simplePacketUser) {
+    public PacketDecoder(final SimplePacketUser simplePacketUser) {
         this.simplePacketUser = simplePacketUser;
     }
 
@@ -30,12 +32,12 @@ public final class PacketDecoder extends MessageToMessageDecoder<ByteBuf> {
     protected void decode(final ChannelHandlerContext ctx, final ByteBuf msg, final List<Object> out) throws Exception {
         if (msg.isReadable()) {
             try (final var ignored = PacketoSpigotPlatform.getInstance().getTimingManager().ofStart("PacketDecoder")) {
-                if (PacketoSpigotPlatform.getInstance().getListenerManager().callEventNormal(new SpigotPacketEvent(PacketDirection.CLIENT, simplePacketUser, msg))) {
+                if (PacketoSpigotPlatform.getInstance().getListenerManager().callEventNormal(new SpigotPacketEvent(this.player, PacketDirection.CLIENT, simplePacketUser, msg))) {
                     msg.clear();
                 }
                 msg.resetReaderIndex();
                 out.add(msg.retain());
-                PacketoSpigotPlatform.getInstance().getListenerManager().callEventReadonly(new SpigotPacketEvent(PacketDirection.CLIENT, simplePacketUser, msg));
+                PacketoSpigotPlatform.getInstance().getListenerManager().callEventReadonly(new SpigotPacketEvent(this.player, PacketDirection.CLIENT, simplePacketUser, msg));
             }
         }
     }
@@ -60,5 +62,9 @@ public final class PacketDecoder extends MessageToMessageDecoder<ByteBuf> {
         pipeline.addAfter(PipelineNames.MINECRAFT_COMPRESSOR, PipelineNames.ENCODER_NAME, pipeline.remove(PipelineNames.ENCODER_NAME));
         pipeline.addAfter(PipelineNames.MINECRAFT_DECOMPRESSOR, PipelineNames.DECODER_NAME, pipeline.remove(PipelineNames.DECODER_NAME));
         super.userEventTriggered(ctx, event);
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 }

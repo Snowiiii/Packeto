@@ -54,11 +54,9 @@ public class SpigotListenerManager implements ListenerManager<SpigotPacketEvent,
     }
 
     @Override
-    public void removeListener(final @NotNull SpigotPacketListener listener, final boolean readOnly) {
-        if (readOnly) {
+    public void removeListener(final @NotNull SpigotPacketListener listener) {
+        if (!this.packetListeners.remove(listener)) {
             this.readonlyPacketListeners.remove(listener);
-        } else {
-            this.packetListeners.remove(listener);
         }
     }
 

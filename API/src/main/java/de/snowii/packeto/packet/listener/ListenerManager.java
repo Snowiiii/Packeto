@@ -10,14 +10,34 @@ import java.util.List;
  */
 public interface ListenerManager<T, E> {
 
+    /**
+     * for Packeto's Internal use
+     */
     boolean callEventNormal(final @NotNull T event);
 
+    /**
+     * for Packeto's Internal use
+     */
     void callEventReadonly(final @NotNull T event);
 
+    /**
+     * Register a new Platform Specific Packet Listener
+     *
+     * @param listener Platform Listener
+     * @param readOnly If True Listener will not able to Cancel the Packet, So the Listener will be a Readonly Listener this can Speed up things and prevent Bugs
+     */
     void registerListener(final @NotNull E listener, final boolean readOnly);
 
-    void removeListener(final @NotNull E listener, final boolean readOnly);
+    /**
+     * Removed a Platform Specific Packet Listener
+     *
+     * @param listener Platform Listener
+     */
+    void removeListener(final @NotNull E listener);
 
+    /**
+     * Removes all Platform Specific Packet Listeners
+     */
     void removeAllListeners();
 
     List<E> getPacketListeners();

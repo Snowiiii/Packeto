@@ -28,6 +28,10 @@ public class ConnectionUserManager {
         }
     }
 
+    public static SimplePacketUser getUser(final UUID uuid) {
+        return clients.get(uuid);
+    }
+
     public static void onDisconnect(final @NotNull SimplePacketUser connection) {
         connections.remove(connection);
         clients.remove(connection.getUUID());

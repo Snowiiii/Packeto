@@ -15,7 +15,7 @@ public class PaperInjector {
     public static final boolean PAPER_PROTOCOL_METHOD = hasServerProtocolMethod();
 
 
-    public static void setPaperChannelInitializeListener() throws ReflectiveOperationException {
+    public static void addPaperChannelInitializeListener() throws ReflectiveOperationException {
         // Call io.papermc.paper.network.ChannelInitializeListenerHolder.addListener(net.kyori.adventure.key.Key, io.papermc.paper.network.ChannelInitializeListener)
         // Create an interface proxy of ChannelInitializeListener
         final Class<?> listenerClass = Class.forName("io.papermc.paper.network.ChannelInitializeListener");

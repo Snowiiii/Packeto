@@ -16,7 +16,10 @@ public class SpigotReflection {
     private static String MINECRAFT_PREFIX_PACKAGE = "net.minecraft.server.";
     private static String MINECRAFT_FULL_PACKAGE = null;
 
+    private static Class<?> NETWORK_MANAGER, SERVER_CONNECTION;
+
     private static boolean hasInit;
+    private static boolean useCache = true;
 
     public static void init() {
         if (hasInit) throw new IllegalStateException("Tried to Init SpigotReflection twice");
@@ -25,6 +28,10 @@ public class SpigotReflection {
         MINECRAFT_FULL_PACKAGE = MINECRAFT_PREFIX_PACKAGE = "net.minecraft.";
 
         hasInit = true;
+    }
+
+    public static void setUseCache(boolean useCache) {
+        SpigotReflection.useCache = useCache;
     }
 
     public static Class<?> getMinecraftClass(final @NotNull String className) {
@@ -126,7 +133,10 @@ public class SpigotReflection {
     }
 
     public static Class<?> getNetworkManager() {
-        return getMinecraftClass("network.NetworkManager", "network.Connection", "NetworkManager");
+        if (useCache && NETWORK_MANAGER == null) {
+            NETWORK_MANAGER = getMinecraftClass("network.NetworkManager", "network.Connection", "NetworkManager");
+        }
+        return useCache ? NETWORK_MANAGER : getMinecraftClass("network.NetworkManager", "network.Connection", "NetworkManager");
     }
 
     public static Object getNetworkManager(final @NotNull Player player) {
@@ -153,7 +163,10 @@ public class SpigotReflection {
     }
 
     public static Class<?> getServerConnection() {
-        return getMinecraftClass("server.network.ServerConnection", "server.network.ServerConnectionListener", "ServerConnection");
+        if (useCache && SERVER_CONNECTION == null) {
+            return getMinecraftClass("server.network.ServerConnection", "server.network.ServerConnectionListener", "ServerConnection");
+        }
+        return useCache ? SERVER_CONNECTION : getMinecraftClass("server.network.ServerConnection", "server.network.ServerConnectionListener", "ServerConnection");
     }
 
     public static Class<?> getMinecraftServer() {

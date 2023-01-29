@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 
-public class PacketType implements Serializable, Cloneable, Comparable<PacketType> {
+public class PacketType implements Serializable, Cloneable {
     @SuppressWarnings("unused")
     public static final int UNKNOWN_PACKET = -1;
 
@@ -18,11 +18,6 @@ public class PacketType implements Serializable, Cloneable, Comparable<PacketTyp
         this.state = state;
         this.direction = direction;
         this.currentId = currentId;
-    }
-
-    @Override
-    public int compareTo(@NotNull PacketType packetType) {
-        return 0;
     }
 
     /**
@@ -47,14 +42,8 @@ public class PacketType implements Serializable, Cloneable, Comparable<PacketTyp
             }
 
             @Nullable
-            public static BasePacketType getById(final int packetId) {
-                if (packetId == 0) {
-                    return RESPONSE;
-                } else if (packetId == 1) {
-                    return PONG;
-                } else {
-                    return null;
-                }
+            public static BasePacketType getById(final int packetID) {
+                return values()[packetID];
             }
 
             public int getId() {
@@ -79,14 +68,7 @@ public class PacketType implements Serializable, Cloneable, Comparable<PacketTyp
 
             @Nullable
             public static BasePacketType getById(int packetID) {
-                return switch (packetID) {
-                    case 0 -> DISCONNECT;
-                    case 1 -> ENCRYPTION_REQUEST;
-                    case 2 -> LOGIN_SUCCESS;
-                    case 3 -> SET_COMPRESSION;
-                    case 4 -> LOGIN_PLUGIN_REQUEST;
-                    default -> null;
-                };
+                return values()[packetID];
             }
 
             @Override
@@ -113,11 +95,7 @@ public class PacketType implements Serializable, Cloneable, Comparable<PacketTyp
 
             @Nullable
             public static BasePacketType getById(final int packetID) {
-                if (packetID == 0) {
-                    return HANDSHAKE;
-                } else {
-                    return null;
-                }
+                return values()[packetID];
             }
 
 
@@ -138,14 +116,8 @@ public class PacketType implements Serializable, Cloneable, Comparable<PacketTyp
             }
 
             @Nullable
-            public static BasePacketType getById(final int packetId) {
-                if (packetId == 0) {
-                    return REQUEST;
-                } else if (packetId == 1) {
-                    return PING;
-                } else {
-                    return null;
-                }
+            public static BasePacketType getById(final int packetID) {
+                return values()[packetID];
             }
 
             public int getId() {
@@ -167,15 +139,7 @@ public class PacketType implements Serializable, Cloneable, Comparable<PacketTyp
 
             @Nullable
             public static BasePacketType getById(int packetID) {
-                if (packetID == 0) {
-                    return LOGIN_START;
-                } else if (packetID == 1) {
-                    return ENCRYPTION_RESPONSE;
-                } else if (packetID == 2) {
-                    return LOGIN_PLUGIN_RESPONSE;
-                } else {
-                    return null;
-                }
+                return values()[packetID];
             }
 
             @Override

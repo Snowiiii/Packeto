@@ -20,6 +20,7 @@ public class PacketEvent {
         this.packetUser = packetUser;
         this.packetBuffer = new PacketBuffer(byteBuf);
         this.packetType = PacketType.getById(direction, packetUser.getState(), this.packetBuffer.readVarInt());
+        if (this.packetType == null) throw new IllegalStateException("Packet Type is null, Dir: " + direction);
     }
 
     public void setCancelled(boolean cancelled) {

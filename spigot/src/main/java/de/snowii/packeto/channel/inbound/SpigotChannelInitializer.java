@@ -41,6 +41,8 @@ public class SpigotChannelInitializer extends ChannelInitializer<Channel> implem
         try (var ignored = PacketoSpigotPlatform.getInstance().getTimingManager().ofStart("InitChannel")) {
             SimplePacketUser user = new SimplePacketUser(channel);
 
+            // ConnectionUserManager.newUser(user);
+
             final ChannelPipeline pipeline = channel.pipeline();
             pipeline.addAfter(PipelineNames.MINECRAFT_ENCODER, PipelineNames.ENCODER_NAME, new PacketEncoder(user));
             pipeline.addAfter(PipelineNames.MINECRAFT_DECODER, PipelineNames.DECODER_NAME, new PacketDecoder(user));
