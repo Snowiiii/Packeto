@@ -6,6 +6,7 @@ import de.snowii.packeto.packet.PacketType;
 import de.snowii.packeto.packet.buffer.PacketBuffer;
 import de.snowii.packeto.packet.user.SimplePacketUser;
 import io.netty.buffer.ByteBuf;
+import org.jetbrains.annotations.NotNull;
 
 
 public class PacketEvent {
@@ -15,7 +16,7 @@ public class PacketEvent {
     private final PacketBuffer packetBuffer;
     private final SimplePacketUser packetUser;
 
-    public PacketEvent(PacketDirection direction, SimplePacketUser packetUser, ByteBuf byteBuf) {
+    public PacketEvent(final @NotNull PacketDirection direction, SimplePacketUser packetUser, ByteBuf byteBuf) {
         this.direction = direction;
         this.packetUser = packetUser;
         this.packetBuffer = new PacketBuffer(byteBuf);
@@ -31,7 +32,7 @@ public class PacketEvent {
         return this.isCancelled;
     }
 
-    public PacketDirection getDirection() {
+    public @NotNull PacketDirection getDirection() {
         return this.direction;
     }
 

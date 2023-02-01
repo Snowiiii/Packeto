@@ -12,6 +12,8 @@ public interface ListenerManager<T, E> {
 
     /**
      * for Packeto's Internal use
+     *
+     * @return True if Event was Cancelled, False otherwise
      */
     boolean callEventNormal(final @NotNull T event);
 

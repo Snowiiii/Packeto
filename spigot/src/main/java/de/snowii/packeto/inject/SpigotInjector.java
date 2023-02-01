@@ -1,8 +1,8 @@
 package de.snowii.packeto.inject;
 
 import de.snowii.packeto.channel.inbound.SpigotChannelInitializer;
-import de.snowii.packeto.util.Pair;
 import de.snowii.packeto.util.SynchronizedListWrapper;
+import de.snowii.packeto.util.Tuple;
 import de.snowii.packeto.util.reflection.ReflectionUtil;
 import de.snowii.packeto.util.relfection.SpigotReflection;
 import io.netty.channel.Channel;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class SpigotInjector implements ChannelInjector {
     protected final List<ChannelFuture> injectedFutures = new ArrayList<>();
-    protected final List<Pair<Field, Object>> injectedLists = new ArrayList<>();
+    protected final List<Tuple<Field, Object>> injectedLists = new ArrayList<>();
     private boolean injected = false;
 
     private final boolean usePaper = true;
@@ -87,7 +87,7 @@ public class SpigotInjector implements ChannelInjector {
                         field.set(serverConnection, wrappedList);
                     }
 
-                    injectedLists.add(new Pair<>(field, serverConnection));
+                    injectedLists.add(new Tuple<>(field, serverConnection));
                 }
             }
             this.injected = true;
@@ -183,14 +183,14 @@ public class SpigotInjector implements ChannelInjector {
 
         injectedFutures.clear();
 
-        for (final Pair<Field, Object> pair : injectedLists) {
+        for (final Tuple<Field, Object> pair : injectedLists) {
             try {
-                final Field field = pair.key();
-                final Object o = field.get(pair.value());
+                final Field field = pair.getA();
+                final Object o = field.get(pair.getB());
                 if (o instanceof SynchronizedListWrapper) {
                     final List<ChannelFuture> originalList = ((SynchronizedListWrapper<ChannelFuture>) o).originalList();
                     synchronized (originalList) {
-                        field.set(pair.value(), originalList);
+                        field.set(pair.getB(), originalList);
                     }
                 }
             } catch (ReflectiveOperationException e) {

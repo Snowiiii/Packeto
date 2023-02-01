@@ -18,7 +18,10 @@ public class PipelineUtil {
     private static Method ENCODE_METHOD;
     private static Method MTM_DECODE;
 
+    private static boolean hasInit;
+
     public static void init() {
+        if (hasInit) throw new IllegalStateException("Tried to Init Pipeline Util twice");
         try {
             DECODE_METHOD = ByteToMessageDecoder.class.getDeclaredMethod("decode", ChannelHandlerContext.class, ByteBuf.class, List.class);
             DECODE_METHOD.setAccessible(true);
@@ -26,12 +29,14 @@ public class PipelineUtil {
             ENCODE_METHOD.setAccessible(true);
             MTM_DECODE = MessageToMessageDecoder.class.getDeclaredMethod("decode", ChannelHandlerContext.class, Object.class, List.class);
             MTM_DECODE.setAccessible(true);
+            hasInit = true;
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
     }
 
     public static List<Object> callDecode(final ByteToMessageDecoder decoder, final ChannelHandlerContext ctx, final Object input) throws InvocationTargetException {
+        if (!hasInit) throw new IllegalStateException("Tried to Use Pipeline Util without Init it");
         List<Object> output = new ArrayList<>();
         try {
             PipelineUtil.DECODE_METHOD.invoke(decoder, ctx, input, output);
@@ -42,6 +47,7 @@ public class PipelineUtil {
     }
 
     public static void callEncode(final MessageToByteEncoder<ByteBuf> encoder, final ChannelHandlerContext ctx, final Object msg, final ByteBuf output) throws InvocationTargetException {
+        if (!hasInit) throw new IllegalStateException("Tried to Use Pipeline Util without Init it");
         try {
             PipelineUtil.ENCODE_METHOD.invoke(encoder, ctx, msg, output);
         } catch (IllegalAccessException e) {
@@ -50,6 +56,7 @@ public class PipelineUtil {
     }
 
     public static List<Object> callDecode(final MessageToMessageDecoder<ByteBuf> decoder, final ChannelHandlerContext ctx, final Object msg) throws InvocationTargetException {
+        if (!hasInit) throw new IllegalStateException("Tried to Use Pipeline Util without Init it");
         final List<Object> output = new ArrayList<>();
         try {
             MTM_DECODE.invoke(decoder, ctx, msg, output);

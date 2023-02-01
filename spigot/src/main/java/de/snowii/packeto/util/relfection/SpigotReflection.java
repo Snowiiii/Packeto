@@ -164,7 +164,7 @@ public class SpigotReflection {
 
     public static Class<?> getServerConnection() {
         if (useCache && SERVER_CONNECTION == null) {
-            return getMinecraftClass("server.network.ServerConnection", "server.network.ServerConnectionListener", "ServerConnection");
+            return SERVER_CONNECTION = getMinecraftClass("server.network.ServerConnection", "server.network.ServerConnectionListener", "ServerConnection");
         }
         return useCache ? SERVER_CONNECTION : getMinecraftClass("server.network.ServerConnection", "server.network.ServerConnectionListener", "ServerConnection");
     }
